@@ -1,35 +1,50 @@
-version: '3'
+version: '3.9'
 name: thumbnail-generator
 services:
   redis:
     container_name: redis
-    image: redis:7.0
-    command: /usr/local/etc/redis/redis.conf
+    image: redis:latest
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
     volumes:
-      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
-    ports:
-      - 32774:6379
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf:ro
     sysctls:
       - net.core.somaxconn=324000
       - net.ipv4.tcp_max_syn_backlog=3240000
     restart: always
+    networks:
+      - internal
+
   app:
     container_name: app
     image: ghcr.io/ajayyy/thumbnail-cache
     ports:
-      - 3001:3001
+      - "3001:3001"
     volumes:
       - cache:/app/cache
       - ./config.yaml:/app/config.yaml
+    depends_on:
+      - redis
     restart: always
+    networks:
+      - internal
+
   worker:
     container_name: worker
     image: ghcr.io/ajayyy/thumbnail-cache-worker
     volumes:
       - cache:/app/cache
       - ./config.yaml:/app/config.yaml
+    depends_on:
+      - redis
     restart: always
+    networks:
+      - internal
 
 volumes:
   cache:
     external: true
+
+networks:
+  internal:
+    driver: bridge
+    internal: true
