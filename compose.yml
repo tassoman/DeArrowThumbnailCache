@@ -41,7 +41,6 @@ services:
 
 volumes:
   cache:
-    external: true
 
 networks:
   internal:
