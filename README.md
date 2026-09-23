@@ -6,6 +6,9 @@ This server acts as a cache for recently used generated thumbnails.
 
 The easiest way to host it yourself is using the docker images. Here is a sample compose file to get started. Make sure to copy `config.yaml.example` into `config.yaml`.
 
+## Configuration options
+* `thumbnail_storage.max_cache` lets you configure cache size and control container's volume size. 
+
 ```yaml
 version: '3'
 name: thumbnail-generator
