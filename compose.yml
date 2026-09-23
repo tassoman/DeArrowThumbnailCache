@@ -1,9 +1,8 @@
-version: '3.9'
-name: thumbnail-generator
+name: DeArrow
 services:
   redis:
     container_name: redis
-    image: redis:latest
+    image: redis:8
     command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
     volumes:
       - ./redis/redis.conf:/usr/local/etc/redis/redis.conf:ro
